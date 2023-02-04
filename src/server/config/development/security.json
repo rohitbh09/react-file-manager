@@ -1,0 +1,7 @@
+{
+    "jwt": {
+        "secret": "dropBox%#%#%",
+        "issuer": "user-identity",
+        "audience": "dropBox-au"
+    }
+}
