@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
@@ -41,8 +41,8 @@ function FolderModal ({ fetchFileList, files }) {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const [folderName, setFolderName] = React.useState('');
-
   const handleOpen = () => {
+    setFolderName('');
     setOpen(true);
   };
 

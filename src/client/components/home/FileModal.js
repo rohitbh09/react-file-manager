@@ -95,7 +95,7 @@ function FileModal ({ fetchFileList, files}) {
       <div className="t1" style={{ paddingBottom: '20px' }} > Folder </div>
       <form className={classes.root} noValidate autoComplete="off" style={{ padding: '10px' }}>
         <Grid container alignItems="flex-start" spacing={4} >
-          <Grid item xs={12} spacing={2} >
+          <Grid item xs={12} >
             <input type="file" onChange={ (e) => {
               if (e.target.files) {
                 setFile(e.target.files);

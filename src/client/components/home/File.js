@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import './File.css';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
 import FolderIcon from '@material-ui/icons/Folder';
+import DeleteOutlineRounded from '@material-ui/icons/DeleteOutlineRounded';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import { fetchFileList, fileIdUpdate, updateBreadCrum, currentFolderId } from '../../actions/files';
+import { fetchFileList, fileIdUpdate, updateBreadCrum, currentFolderId, deleteFile } from '../../actions/files';
 
 const useStyles = makeStyles({
   root: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles({
   }
 });
 
-function File ({ singleFile, handleClick, handleDoubleClick, isSelected }) {
+function File ({ files, singleFile, handleClick, handleDoubleClick, isSelected, deleteFileId }) {
   const classes = useStyles();
   let fileName = 'No Name';
   if (singleFile.type === 'file') {
@@ -32,6 +33,10 @@ function File ({ singleFile, handleClick, handleDoubleClick, isSelected }) {
   return (
     <div className="File" onClick={handleClick} onDoubleClick={handleDoubleClick} data-selected={isSelected} >
       <ListItem>
+        {<DeleteOutlineRounded style={{ margin: 15, color: 'red' }} onClick={() => {
+          let parentId = files.parentId || '';
+          deleteFileId({ fileId: singleFile._id, parentId });
+        }}/>}
         <ListItemAvatar>
           <Avatar style={avatarStyle}>
             { singleFile.type === 'folder' ? <FolderIcon /> : <FileIcon />}
@@ -51,8 +56,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   let clickRestict = '';
   return {
+    deleteFileId: (data) => {
+      dispatch(deleteFile(data));
+    },
     handleDoubleClick: (event) => {
-      console.log("handleDoubleClick",ownProps);
       let singleFile = ownProps.singleFile;
       if (singleFile.type === 'file') {
         // dispatch(getFileContent(ownProps.name));
@@ -70,7 +77,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     
     handleClick: (event) => {
       event.stopPropagation();
-      console.log('handleClick', ownProps.files);
       if (ownProps.singleFile && ownProps.singleFile._id) {
         clickRestict = setTimeout(() => {
           dispatch(fileIdUpdate({ fileId: ownProps.singleFile._id }));

@@ -13,7 +13,7 @@ const styles = theme => ({
 function Loader (props) {
   const { classes } = props;
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <CircularProgress className={classes.progress} color="secondary" />
     </Grid>
   );

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { bindActionCreators } from 'redux';
-import { fetchFileList, updateBreadCrum } from '../../actions/files';
+import { fetchFileList, updateBreadCrum, currentFolderId } from '../../actions/files';
 import { connect, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 // material core
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Home ({ files, fetchFileList, updateBreadCrum }) {
   const classes = useStyles();
-  console.log('files', files);
   const selectedId = files.fileId || '';
   // Fetch File List
   useEffect(() => {
@@ -42,11 +41,11 @@ function Home ({ files, fetchFileList, updateBreadCrum }) {
       );
     }
     return (
-      <Grid container spacing={3} style={{ padding: 20 }}>
+      <Grid container style={{ padding: 20 }} key={'G1'}>
         {
           files.list && files.list.map((singleFile) => {
             return (
-              <Grid item xs={3}>
+              <Grid item xs={3} key={`G${singleFile._id}`}>
                 <File files={files} className={classes.paper}
                   singleFile={singleFile}
                   key={singleFile._id}
@@ -64,6 +63,7 @@ function Home ({ files, fetchFileList, updateBreadCrum }) {
       <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: '20px' }}>
         <Link to='#' color="inherit" onClick={() => {
           updateBreadCrum({ list: [] });
+          currentFolderId({ fileId: '' });
           fetchFileList({});
         }}>
           Home
@@ -81,6 +81,7 @@ function Home ({ files, fetchFileList, updateBreadCrum }) {
                   }
                 }
                 updateBreadCrum({ list: breadcrum });
+                currentFolderId({ fileId: el._id });
                 fetchFileList({
                   parentId: el._id
                 });
@@ -91,7 +92,7 @@ function Home ({ files, fetchFileList, updateBreadCrum }) {
           })
         }
       </Breadcrumbs>
-      <FileListComponent/>
+      <FileListComponent key={'fileList'}/>
     </Container>
   );
 }
@@ -104,7 +105,8 @@ const mapStateToProps = state => {
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     fetchFileList,
-    updateBreadCrum
+    updateBreadCrum,
+    currentFolderId,
   }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

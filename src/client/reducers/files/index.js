@@ -39,7 +39,6 @@ const file = (state = initialState, action) => {
       parentId: action.fileId || ''
     });
   case 'BREADCRUM_SELECTED':
-    console.log('BREADCRUM_SELECTED action.list', action);
     return Object.assign({}, state, {
       breadcrum: action.list || []
     });

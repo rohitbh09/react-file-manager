@@ -40,13 +40,11 @@ export const breadcrumSelected = (list) => {
 };
 
 export const currentFolderId = ({ fileId }) => {
-  console.log('currentFolderId', fileId);
   return function (dispatch, getState) {
     dispatch(currentFolder(fileId));
   };
 };
 export const fileIdUpdate = ({ fileId }) => {
-  console.log('fileIdUpdate', fileId);
   return function (dispatch, getState) {
     dispatch(fileSelected(fileId));
   };
@@ -55,6 +53,40 @@ export const fileIdUpdate = ({ fileId }) => {
 export const updateBreadCrum = ({ list }) => {
   return function (dispatch, getState) {
     dispatch(breadcrumSelected(list));
+  };
+};
+
+export const deleteFile = ({ fileId, parentId }) => {
+  const token = localStorage.getItem('token');
+  return function (dispatch, getState) {
+    dispatch(fetchFile());
+    return fetch(`/api/file/${fileId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `JWT ${token}`
+      }
+    })
+      .then(data => {
+        // console.log("data",data);
+        if (data.status === 401) {
+          try {
+            localStorage.removeItem('token');
+          } catch (error) {
+            console.log('[Unauthorized] Token Remove error');
+          }
+          window.location.reload(true);
+        }
+        return data.json();
+      })
+      .then(data => {
+        dispatch(fetchFileList({
+          parentId: parentId
+        }));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(receiveError('File Found Errror'));
+      });
   };
 };
 
