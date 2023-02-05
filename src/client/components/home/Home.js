@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import File from './File';
 import './FileList.css';
 import Loader from './Loader'; 
+import MenuAppBar from './MenuAppBar'; 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1
@@ -59,16 +60,14 @@ function Home ({ files, fetchFileList }) {
   };
   return (
     <Container component="main">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Files
-      </Typography>
-      <Breadcrumbs aria-label="breadcrumb">
+      <MenuAppBar/>
+      <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: '20px' }}>
         <Link color="inherit" href="/" onClick={() => {
           fetchFileList({});
         }}>
           Home
         </Link>
-        <Link color="inherit"  onClick={() => {
+        <Link color="inherit" onClick={() => {
 
         }}>
           Files

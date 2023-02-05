@@ -1,5 +1,5 @@
 {
     "cnd": {
-        "connection": "mongodb+srv://streamspace:zIDL11oCyA4qwjE@cluster0.r1gco9y.mongodb.net/dropbox?retryWrites=true&w=majority"
+        "connection": "mongodb://127.0.0.1:27017/dropbox"
     }
 }
