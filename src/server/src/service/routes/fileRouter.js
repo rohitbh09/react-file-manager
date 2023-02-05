@@ -8,6 +8,8 @@ class FileRouter extends BaseRouter {
   ) {
     super(fileController);
     this.Router.use(authenticated());
+    this.Router.route('/')
+      .get(async (req, res) => this.Controller.list(req, res));
     this.Router.route('/create')
       .post(async (req, res) => this.Controller.create(req, res));
     this.Router.route('/upload')

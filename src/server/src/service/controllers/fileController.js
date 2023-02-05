@@ -17,6 +17,47 @@ class FileController extends ApiController {
     return this._fileRepository;
   }
 
+  async list (req, res) {
+    // check and create folder
+    const { _id } = req.user || {};
+    let { parentId, key, skip, limit } = req.query;
+
+    parentId = parentId || '';
+    key = key || 'type';
+    skip = parseInt(skip) || 0;
+    limit = parseInt(limit) || 30;
+
+    if (parentId) {
+      const folder = await this.FileRepository.getById(parentId);
+      if (!folder) {
+        return res.status(HttpStatus.BadRequest).json({
+          message: 'Folder Not Found',
+          output: false
+        });
+      }
+    }
+
+    try {
+      let query = {};
+      // if (parentId) {
+      query = {
+        parentId: parentId
+      };
+      // }
+      let list = await this.FileRepository.getByPage(query, key, skip, limit);
+      return res.status(HttpStatus.OK).json({
+        list: list,
+        message: 'successfull',
+        output: true
+      });
+    } catch (error) {
+      return res.status(HttpStatus.InternalServerError).json({
+        message: error.message,
+        output: false
+      });
+    }
+  }
+
   async create (req, res) {
     // check and create folder
     const { _id } = req.user || {};
