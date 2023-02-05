@@ -17,7 +17,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import { useHistory } from 'react-router-dom';
 // material icon
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
@@ -47,20 +47,17 @@ const useStyles = makeStyles((theme) => ({
 
 function SignIn ({ user, loginUser }) {
   const classes = useStyles();
+  const history = useHistory();
   const dispatch = useDispatch();
   const [name, setName] = useState('rohitbh09');
   const [password, setPassword] = useState('Hello@333');
-  console.log('user', user);
   const _onSubmit = (e) => {
     e.preventDefault();
     if (!user.isFetching) {
       loginUser(name, password);
+      history.push('/');
     }
   };
-  if (user.isLogin) {
-    return (<Redirect to="/" />);
-  }
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

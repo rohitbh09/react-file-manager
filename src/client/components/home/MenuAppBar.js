@@ -14,10 +14,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import FolderModal from './FolderModal';
 import FileModal from './FileModal';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MenuAppBar () {
+  const history = useHistory();
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -46,8 +48,16 @@ export default function MenuAppBar () {
   };
 
   const fileUploadOpen = () => {
-    // setAnchorEl(null);
-    // showModal();
+    setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('token');
+    } catch (error) {
+      console.log('[Token Remove] ERROR');
+    }
+    setAnchorEl(null);
+    history.push('/login');
   };
 
   return (
@@ -85,7 +95,7 @@ export default function MenuAppBar () {
               >
                 <MenuItem onClick={fileUploadOpen}><FileModal/></MenuItem>
                 <MenuItem onClick={fileUploadOpen}><FolderModal/></MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
           )}
