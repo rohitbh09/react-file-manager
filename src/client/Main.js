@@ -8,7 +8,7 @@ class Main extends React.Component {
     return (
       <div>
         <Switch>
-          <Route path="/" exact component={Home} />
+          <AuthRoute path="/" exact component={Home} />
           <Route path="/login" exact component={Login} />
           <AuthRoute path="/home" exact component={Home} />
         </Switch>

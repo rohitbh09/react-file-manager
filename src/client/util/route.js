@@ -4,7 +4,8 @@ import { Route, Redirect, withRouter } from 'react-router-dom';
 
 const Auth = ({ component: Component, path, isLogin, exact }) => (
   <Route path={path} exact={exact} render={(props) => {
-    return isLogin ? (
+    let token = localStorage.getItem('token');
+    return token ? (
       <Component {...props} />
     ) : (
       <Redirect to="/login" />

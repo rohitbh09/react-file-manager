@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { bindActionCreators } from 'redux';
 import { loginUser } from '../../actions/user';
-import { useHistory } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import React, { useState } from 'react';
@@ -49,9 +48,8 @@ const useStyles = makeStyles((theme) => ({
 function SignIn ({ user, loginUser }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const history = useHistory();
-  const [name, setName] = useState('admin@dev.io');
-  const [password, setPassword] = useState('Admin@1223');
+  const [name, setName] = useState('rohitbh09');
+  const [password, setPassword] = useState('Hello@33');
   console.log('user', user);
   const _onSubmit = (e) => {
     e.preventDefault();
@@ -60,7 +58,7 @@ function SignIn ({ user, loginUser }) {
     }
   };
   if (user.isLogin) {
-    return (<Redirect to="/home" />);
+    return (<Redirect to="/" />);
   }
 
   return (

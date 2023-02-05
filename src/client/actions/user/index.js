@@ -35,7 +35,11 @@ export const loginUser = (userName, password) => {
       .then(data => data.json())
       .then(data => {
         if (data.output) {
-          console.log('data', data);
+          try {
+            localStorage.setItem('token', data.data.token);
+          } catch (error) {
+            console.error('Set Local Store ERROR', error);
+          }
           dispatch(receiveUser(data.data));
         } else {
           throw new Error('No such user found!!');
