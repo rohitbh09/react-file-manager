@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const initialState = {
   list: [],
   isFetching: false,
@@ -30,11 +31,15 @@ const file = (state = initialState, action) => {
       message: action.message || ''
     });
   case 'FILE_SELECTED':
-    console.log("FILE_SELECTED", action);
     return Object.assign({}, state, {
       fileId: action.fileId || ''
     });
+  case 'CURRENT_FOLDER':
+    return Object.assign({}, state, {
+      parentId: action.fileId || ''
+    });
   case 'BREADCRUM_SELECTED':
+    console.log('BREADCRUM_SELECTED action.list', action);
     return Object.assign({}, state, {
       breadcrum: action.list || []
     });

@@ -26,6 +26,12 @@ export const fileSelected = (fileId) => {
     fileId
   };
 };
+export const currentFolder = (fileId) => {
+  return {
+    type: 'CURRENT_FOLDER',
+    fileId
+  };
+};
 export const breadcrumSelected = (list) => {
   return {
     type: 'BREADCRUM_SELECTED',
@@ -33,8 +39,14 @@ export const breadcrumSelected = (list) => {
   };
 };
 
+export const currentFolderId = ({ fileId }) => {
+  console.log('currentFolderId', fileId);
+  return function (dispatch, getState) {
+    dispatch(currentFolder(fileId));
+  };
+};
 export const fileIdUpdate = ({ fileId }) => {
-  console.log("fileIdUpdate", fileId);
+  console.log('fileIdUpdate', fileId);
   return function (dispatch, getState) {
     dispatch(fileSelected(fileId));
   };

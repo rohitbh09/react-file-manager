@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function FolderModal ({ fetchFileList, files}) {
+function FolderModal ({ fetchFileList, files }) {
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -52,6 +52,7 @@ function FolderModal ({ fetchFileList, files}) {
   const submitFolder = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    let parentId = files.parentId || '';
     fetch('/api/file/create', {
       method: 'POST',
       headers: {
@@ -60,7 +61,7 @@ function FolderModal ({ fetchFileList, files}) {
       },
       body: JSON.stringify({
         folderName: folderName,
-        parentId: ''
+        parentId: parentId
       })
     })
       .then(data => {
@@ -76,13 +77,9 @@ function FolderModal ({ fetchFileList, files}) {
         return data.json();
       })
       .then(data => {
-        if (files && files.fileId) {
-          fetchFileList({
-            parentId: files.fileId
-          });
-        } else {
-          fetchFileList({});
-        }
+        fetchFileList({
+          parentId: parentId
+        });
         handleClose();
       })
       .catch((err) => {

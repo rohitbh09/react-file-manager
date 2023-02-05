@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { bindActionCreators } from 'redux';
-import { fetchFileList } from '../../actions/files';
+import { fetchFileList, updateBreadCrum } from '../../actions/files';
 import { connect, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 // material core
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary
   }
 }));
-function Home ({ files, fetchFileList }) {
+function Home ({ files, fetchFileList, updateBreadCrum }) {
   const classes = useStyles();
   console.log('files', files);
   const selectedId = files.fileId || '';
@@ -47,7 +47,7 @@ function Home ({ files, fetchFileList }) {
           files.list && files.list.map((singleFile) => {
             return (
               <Grid item xs={3}>
-                <File className={classes.paper}
+                <File files={files} className={classes.paper}
                   singleFile={singleFile}
                   key={singleFile._id}
                   isSelected={ selectedId === singleFile._id ? true : false }/>
@@ -62,16 +62,34 @@ function Home ({ files, fetchFileList }) {
     <Container component="main">
       <MenuAppBar/>
       <Breadcrumbs aria-label="breadcrumb" style={{ marginBottom: '20px' }}>
-        <Link color="inherit" href="/" onClick={() => {
+        <Link to='#' color="inherit" onClick={() => {
+          updateBreadCrum({ list: [] });
           fetchFileList({});
         }}>
           Home
         </Link>
-        <Link color="inherit" onClick={() => {
-
-        }}>
-          Files
-        </Link>
+        {
+          files.breadcrum && files.breadcrum.map((el) => {
+            return (
+              <Link to='#' color="inherit" onClick={() => {
+                // update breakcrum
+                let breadcrum = [];
+                for (let menu of files.breadcrum) {
+                  breadcrum.push(menu);
+                  if (menu._id === el._id) {
+                    break;
+                  }
+                }
+                updateBreadCrum({ list: breadcrum });
+                fetchFileList({
+                  parentId: el._id
+                });
+              }}>
+                {el.name}
+              </Link>
+            );
+          })
+        }
       </Breadcrumbs>
       <FileListComponent/>
     </Container>
@@ -85,7 +103,8 @@ const mapStateToProps = state => {
 };
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    fetchFileList
+    fetchFileList,
+    updateBreadCrum
   }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

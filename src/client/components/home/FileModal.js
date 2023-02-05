@@ -55,10 +55,10 @@ function FileModal ({ fetchFileList, files}) {
       return;
     }
     const token = localStorage.getItem('token');
-    
+    let parentId = files.parentId || '';
     let data = new FormData();
     data.append('file', file[0]);
-    data.append('parentId', '');
+    data.append('parentId', parentId);
     // data.append('user', 'hubot')
     fetch('/api/file/upload', {
       method: 'POST',
@@ -80,13 +80,9 @@ function FileModal ({ fetchFileList, files}) {
         return data.json();
       })
       .then(data => {
-        if (files && files.fileId) {
-          fetchFileList({
-            parentId: files.fileId
-          });
-        } else {
-          fetchFileList({});
-        }
+        fetchFileList({
+          parentId: parentId
+        });
         handleClose();
       })
       .catch((err) => {

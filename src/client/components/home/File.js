@@ -10,7 +10,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import { fetchFileList, fileIdUpdate } from '../../actions/files';
+import { fetchFileList, fileIdUpdate, updateBreadCrum, currentFolderId } from '../../actions/files';
 
 const useStyles = makeStyles({
   root: {
@@ -59,6 +59,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         return;
       }
       clearTimeout(clickRestict);
+      let breadcrum = ownProps.files && ownProps.files.breadcrum ? ownProps.files.breadcrum : [];
+      breadcrum.push({ _id: singleFile._id, name: singleFile.name });
+      dispatch(updateBreadCrum({ list: breadcrum }));
+      dispatch(currentFolderId({ fileId: singleFile._id }));
       dispatch(fetchFileList({
         parentId: singleFile._id
       }));
@@ -66,19 +70,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     
     handleClick: (event) => {
       event.stopPropagation();
-      console.log("handleClick",ownProps.files);
+      console.log('handleClick', ownProps.files);
       if (ownProps.singleFile && ownProps.singleFile._id) {
         clickRestict = setTimeout(() => {
           dispatch(fileIdUpdate({ fileId: ownProps.singleFile._id }));
         }, 250);
       }
-      // if (event.ctrlKey) {
-      //     dispatch(toggleSelectedFile(ownProps));
-      // } else if (event.shiftKey) {
-      //   dispatch(setSelectedFileFromLastTo(ownProps));
-      // } else {
-      //   dispatch(setSelectedFiles([ownProps]));
-      // }
     }
   };
 };
