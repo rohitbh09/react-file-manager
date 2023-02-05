@@ -5,10 +5,10 @@ export const fetchUser = () => {
   };
 };
 
-export const receiveUser = post => {
+export const receiveUser = data => {
   return {
     type: 'FETCHED_USER',
-    data: post
+    data: data
   };
 };
 
@@ -48,29 +48,5 @@ export const loginUser = (userName, password) => {
       .catch((err) => {
         dispatch(receiveError())
       });
-  };
-};
-
-export const fetchUserInfo = (userName, password) => {
-  const user = userName.replace(/\s/g, '');
-  return function (dispatch, getState) {
-    dispatch(fetchUser());
-    return fetch('/user/signIn', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userName: userName,
-        password: password
-      })
-    })
-      .then(data => data.json())
-      .then(data => {
-        if (data.message === 'Not Found') {
-          throw new Error('No such user found!!');
-        } else dispatch(receiveUser(data));
-      })
-      .catch(err => dispatch(receiveError()));
   };
 };

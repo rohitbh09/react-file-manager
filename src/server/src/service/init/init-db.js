@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import mongoose from 'mongoose';
 
 export default function (dbConfig) {
@@ -8,6 +9,7 @@ export default function (dbConfig) {
     connection.openUri(dbConfig.connection,
       (err) => {
         if (err) {
+          console.error('Failed to connect to mongo on startup', err);
           reject(err);
         } else {
           resolve(connection);

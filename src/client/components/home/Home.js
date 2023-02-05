@@ -1,43 +1,92 @@
 /* eslint-disable no-console */
 import { bindActionCreators } from 'redux';
-import { loginUser } from '../../actions/user';
-import { useHistory } from 'react-router-dom';
+import { fetchFileList } from '../../actions/files';
 import { connect, useDispatch } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // material core
 import { Alert } from '@material-ui/lab';
-import { Container, Typography, Grid, InputLabel } from '@material-ui/core';
-import FileCard from './Card'
-const products = [
-  { id: 'aa1', name: 'name1', cover: 'cover1', price: 'price1', colors: 'colors1', status: 'status1', priceSale: 'priceSale1' },
-  { id: 'a2', name: 'name2', cover: 'cover2', price: 'price2', colors: 'colors2', status: 'status2', priceSale: 'priceSale2' }
-];
-function Home ({ user, loginUser }) {
+import { Container, Typography, Grid, Breadcrumbs, Link } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import File from './File';
+import './FileList.css';
+import Loader from './Loader'; 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+  }
+}));
+function Home ({ files, fetchFileList }) {
+  const classes = useStyles();
+  console.log('files', files);
+  const selectedId = files.fileId || '';
+  // Fetch File List
+  useEffect(() => {
+    fetchFileList({});
+  }, []);
+
+  const FileListComponent = () => {
+    if (files.isFetching) {
+      return (
+        <Loader/>
+      );
+    }
+    if (!files.list || files.list.length === 0) {
+      return (
+        <div>{ 'No Files' }</div>
+      );
+    }
+    return (
+      <Grid container spacing={3} style={{ padding: 20 }}>
+        {
+          files.list && files.list.map((singleFile) => {
+            return (
+              <Grid item xs={3}>
+                <File className={classes.paper}
+                  singleFile={singleFile}
+                  key={singleFile._id}
+                  isSelected={ selectedId === singleFile._id ? true : false }/>
+              </Grid>
+            );
+          })
+        }
+      </Grid>
+    );
+  };
   return (
     <Container component="main">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        Files
       </Typography>
-      <Grid container spacing={3}>
-        {products.map((product) => (
-          <Grid key={product.id} item xs={12} sm={6} md={3}>
-            <FileCard product={product}/>
-          </Grid>
-        ))}
-      </Grid>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link color="inherit" href="/" onClick={() => {
+          fetchFileList({});
+        }}>
+          Home
+        </Link>
+        <Link color="inherit"  onClick={() => {
+
+        }}>
+          Files
+        </Link>
+      </Breadcrumbs>
+      <FileListComponent/>
     </Container>
   );
 }
 
 const mapStateToProps = state => {
   return {
-    user: state.users
+    files: state.files
   };
 };
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    loginUser
+    fetchFileList
   }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
