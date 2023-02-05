@@ -27,7 +27,9 @@ Promise.all([
     logger.info(`Server started on port ${PORT}`);
   });
   process.on('SIGINT', async () => {
+    console.log('SIGINT.');
     await dbConnection.close();
+    process.exit(0);
   });
 }).catch(err => {
   console.log('An error occurred while initializing the application.', err);
